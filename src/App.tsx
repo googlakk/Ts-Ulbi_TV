@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect} from 'react'
+import Card, { CardVariant } from './components/Card'
+import UseList from './components/UseList'
+import { IUser } from './types/types'
+import axios from 'axios'
+const App = () => {
+  const [users, setUsers]  = useState<IUser[]>([])
 
-function App() {
+  useEffect(()=> {
+    fetchUsers()
+  }, [])
+  async function fetchUsers() {
+    try{
+      const res = await axios.get<IUser[]>('https://jsonplaceholder.typicode.com/users')
+      setUsers(res.data)
+    } catch(err) {
+      alert(err)
+    }
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className=''>
+      <Card
+        variant={CardVariant.success}
+        width='200px'
+        height='200px'
+        onCLick={(num)=> console.log('click', num)}
+      > 
+          <button>
+             click me
+          </button>
+      </Card>
+    <UseList
+        users={users}
+    />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
